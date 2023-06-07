@@ -1,4 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shortenit/screens/recognize.dart';
+import 'package:shortenit/utils/image_cropper.dart';
+import 'package:shortenit/utils/image_picker_class.dart';
 
 void main() {
   runApp(const MyApp());
@@ -64,59 +70,101 @@ class _MyHomePageState extends State<HomePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.grey,
-                          child: Icon(
-                            Icons.subject,
-                            color: Colors.white,
+                    GestureDetector(
+                      onTap: () {
+                        // Perform action for Button 1
+                        // Add your desired logic here
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Colors.grey,
+                            child: Icon(
+                              Icons.subject,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Text',
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                          SizedBox(height: 8),
+                          Text(
+                            'Text',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.grey,
-                          child: Icon(
-                            Icons.camera_alt_outlined,
-                            color: Colors.white,
+                    GestureDetector(
+                      onTap: () {
+                        pickImage(source: ImageSource.camera).then((value) {
+                          if (value != '') {
+                            imageCropperView(value, context).then((value) {
+                              if (value != '') {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (_) =>
+                                          RecognizePage(path: value),
+                                    ));
+                              }
+                            });
+                          }
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Colors.grey,
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Camera',
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                          SizedBox(height: 8),
+                          Text(
+                            'Camera',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.grey,
-                          child: Icon(
-                            Icons.upload,
-                            color: Colors.white,
+                    GestureDetector(
+                      onTap: () {
+                        pickImage(source: ImageSource.gallery).then((value) {
+                          if (value != '') {
+                            imageCropperView(value, context).then((value) {
+                              if (value != '') {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (_) =>
+                                          RecognizePage(path: value),
+                                    ));
+                              }
+                            });
+                          }
+                        });
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Colors.grey,
+                            child: Icon(
+                              Icons.upload,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Upload',
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                          SizedBox(height: 8),
+                          Text(
+                            'Upload',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
