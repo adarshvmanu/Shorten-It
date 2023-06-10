@@ -1,5 +1,7 @@
 import 'dart:developer';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class RecognizePage extends StatefulWidget {
@@ -14,6 +16,8 @@ class _RecognizePageState extends State<RecognizePage> {
   bool _isBusy = false;
   String recognizedText = '';
   double sliderValue = 0.0;
+  String summarizedText = '';
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -88,9 +92,9 @@ class _RecognizePageState extends State<RecognizePage> {
                       ),
                       const SizedBox(width: 20),
                       Expanded(
-                        child: FilledButton(
+                        child: ElevatedButton(
                           onPressed: () {
-                            // Perform summarize action
+                            summarizeText(recognizedText);
                           },
                           child: const Text('Summarize'),
                         ),
@@ -98,6 +102,22 @@ class _RecognizePageState extends State<RecognizePage> {
                     ],
                   ),
                 ),
+                if (isLoading)
+                  const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator(),
+                  ),
+                if (summarizedText.isNotEmpty)
+                  Card(
+                    margin: const EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Text(
+                        summarizedText,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
               ],
             ),
     );
@@ -117,5 +137,36 @@ class _RecognizePageState extends State<RecognizePage> {
       recognizedText = recognizedTextResult.text;
       _isBusy = false;
     });
+  }
+
+  void summarizeText(String text) async {
+    final url = Uri.parse('https://0abd-2409-4073-4e00-c555-15ec-a6c9-55a9-aac7.ngrok-free.app/summarize');
+    final headers = {'Content-Type': 'application/json'};
+    final body = jsonEncode({'text': text});
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        setState(() {
+          summarizedText = jsonResponse['summary'];
+          isLoading = false;
+        });
+      } else {
+        print('API request failed with status code ${response.statusCode}');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error occurred during API request: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }
