@@ -13,6 +13,7 @@ class RecognizePage extends StatefulWidget {
 class _RecognizePageState extends State<RecognizePage> {
   bool _isBusy = false;
   String recognizedText = '';
+  double sliderValue = 0.0;
 
   @override
   void initState() {
@@ -25,43 +26,79 @@ class _RecognizePageState extends State<RecognizePage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final cardHeight = screenHeight / 3;
+
     return Scaffold(
       appBar: AppBar(title: const Text("Recognized Page")),
       body: _isBusy == true
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : Container(
-              padding: const EdgeInsets.all(20),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+          : Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  child: SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxHeight: cardHeight),
+                      child: LayoutBuilder(
+                        builder: (BuildContext context, BoxConstraints constraints) {
+                          return Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 2,
+                            child: Container(
+                              width: constraints.maxWidth,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: SingleChildScrollView(
+                                  child: Text(
+                                    recognizedText,
+                                    style: const TextStyle(fontSize: 16),
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                 ),
-                elevation: 2,
-                child: Stack(
-                  children: [
-                    SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(
-                          recognizedText,
-                          style: TextStyle(fontSize: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Slider(
+                          value: sliderValue,
+                          min: 0.0,
+                          max: 100.0,
+                          divisions: 4,
+                          label: "${sliderValue.round()}%",
+                          onChanged: (value) {
+                            setState(() {
+                              sliderValue = value;
+                            });
+                          },
                         ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: 12,
-                      right: 12,
-                      child: FilledButton(
-                        onPressed: () {
-                          // Perform summarize action
-                        },
-                        child: Text('Summarize'),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: FilledButton(
+                          onPressed: () {
+                            // Perform summarize action
+                          },
+                          child: const Text('Summarize'),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
     );
   }
