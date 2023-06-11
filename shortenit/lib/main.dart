@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shortenit/screens/recognize.dart';
 import 'package:shortenit/utils/image_cropper.dart';
@@ -16,12 +17,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Shorten-it ',
       theme: ThemeData(
-        colorSchemeSeed: Colors.purple,
+        colorSchemeSeed: Colors.indigo,
         useMaterial3: true,
         brightness: Brightness.light,
       ),
       darkTheme: ThemeData(
-        colorSchemeSeed: Colors.purple,
+        colorSchemeSeed: Colors.blue,
         useMaterial3: true,
         brightness: Brightness.dark,
       ),

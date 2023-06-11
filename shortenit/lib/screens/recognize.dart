@@ -18,7 +18,6 @@ class _RecognizePageState extends State<RecognizePage> {
   double sliderValue = 0.0;
   String summarizedText = '';
   bool isLoading = false;
-  int totalTextSize = 0;
 
   @override
   void initState() {
@@ -35,7 +34,7 @@ class _RecognizePageState extends State<RecognizePage> {
     final cardHeight = screenHeight / 3;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("")),
+      appBar: AppBar(title: const Text("Recognized Page")),
       body: _isBusy == true
           ? const Center(
               child: CircularProgressIndicator(),
@@ -48,14 +47,13 @@ class _RecognizePageState extends State<RecognizePage> {
                     child: ConstrainedBox(
                       constraints: BoxConstraints(maxHeight: cardHeight),
                       child: LayoutBuilder(
-                        builder:
-                            (BuildContext context, BoxConstraints constraints) {
+                        builder: (BuildContext context, BoxConstraints constraints) {
                           return Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                             elevation: 2,
-                            child: SizedBox(
+                            child: Container(
                               width: constraints.maxWidth,
                               child: Padding(
                                 padding: const EdgeInsets.all(12),
@@ -87,11 +85,7 @@ class _RecognizePageState extends State<RecognizePage> {
                           label: "${sliderValue.round()}%",
                           onChanged: (value) {
                             setState(() {
-                              if (value == 0) {
-                                sliderValue = 25;
-                              } else {
-                                sliderValue = value;
-                              }
+                              sliderValue = value;
                             });
                           },
                         ),
@@ -109,10 +103,9 @@ class _RecognizePageState extends State<RecognizePage> {
                   ),
                 ),
                 if (isLoading)
-                  const Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                  const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator(),
                   ),
                 if (summarizedText.isNotEmpty)
                   Card(
@@ -137,30 +130,23 @@ class _RecognizePageState extends State<RecognizePage> {
       _isBusy = true;
     });
 
+    log(image.filePath!);
     final RecognizedText recognizedTextResult =
         await textRecognizer.processImage(image);
-
     setState(() {
       recognizedText = recognizedTextResult.text;
-      totalTextSize =
-          recognizedText.split(' ').length; // Calculate total word count
       _isBusy = false;
     });
   }
 
   void summarizeText(String text) async {
+    final url = Uri.parse('https://0abd-2409-4073-4e00-c555-15ec-a6c9-55a9-aac7.ngrok-free.app/summarize');
+    final headers = {'Content-Type': 'application/json'};
+    final body = jsonEncode({'text': text});
+
     setState(() {
       isLoading = true;
-      summarizedText = '';
     });
-
-    final double percentage = sliderValue / 100.0;
-    final int summarySize = (totalTextSize * percentage).round();
-
-    final url = Uri.parse(
-        'https://60aa-2409-4073-496-2cd-5142-d09e-dc54-c97.ngrok-free.app/summarize');
-    final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({'text': text, 'summary_size': summarySize});
 
     try {
       final response = await http.post(url, headers: headers, body: body);
@@ -171,13 +157,13 @@ class _RecognizePageState extends State<RecognizePage> {
           isLoading = false;
         });
       } else {
-        log('API request failed with status code ${response.statusCode}');
+        print('API request failed with status code ${response.statusCode}');
         setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
-      log('Error occurred during API request: $e');
+      print('Error occurred during API request: $e');
       setState(() {
         isLoading = false;
       });
