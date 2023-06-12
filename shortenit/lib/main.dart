@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,22 +23,30 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Shorten-it ',
-      theme: ThemeData(
-        colorSchemeSeed: Colors.blue,
-        useMaterial3: true,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        colorSchemeSeed: Colors.blue,
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
-      home: const HomePage(title: ' Shorten-It '),
-      debugShowCheckedModeBanner: false,
-    );
+    return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
+      return MaterialApp(
+        title: 'Shorten-it ',
+        theme: ThemeData(
+          colorScheme: lightColorScheme ?? _defaultLightColorScheme,
+          useMaterial3: true,
+          brightness: Brightness.light,
+        ),
+        darkTheme: ThemeData(
+          colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
+          useMaterial3: true,
+          brightness: Brightness.dark,
+        ),
+        home: const HomePage(title: ' Shorten-It '),
+        debugShowCheckedModeBanner: false,
+      );
+    });
   }
+
+  static final _defaultLightColorScheme =
+      ColorScheme.fromSwatch(primarySwatch: Colors.blue);
+
+  static final _defaultDarkColorScheme = ColorScheme.fromSwatch(
+      primarySwatch: Colors.blue, brightness: Brightness.dark);
 }
 
 class HomePage extends StatefulWidget {
@@ -51,6 +60,7 @@ class HiveBoxListView extends StatefulWidget {
   const HiveBoxListView({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _HiveBoxListViewState createState() => _HiveBoxListViewState();
 }
 
@@ -75,17 +85,33 @@ class _HiveBoxListViewState extends State<HiveBoxListView> {
       itemBuilder: (context, index) {
         final summaryQuestion = box.getAt(index) as SummaryQuestion;
         return Card(
-          child:Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile (
-            title: Text(summaryQuestion.question),
-            subtitle: Text(summaryQuestion.summary),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () => deleteItem(index),
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        summaryQuestion.question,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      Text(summaryQuestion.summary),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => deleteItem(index),
+                ),
+              ],
             ),
           ),
-          )
         );
       },
     );
@@ -105,9 +131,7 @@ class _MyHomePageState extends State<HomePage> {
         elevation: 2,
       ),
       body: Container(
-         padding: const EdgeInsets.all(8.0),
-        child: const HiveBoxListView()
-      ),
+          padding: const EdgeInsets.all(8.0), child: const HiveBoxListView()),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           showModalBottomSheet(
@@ -131,11 +155,12 @@ class _MyHomePageState extends State<HomePage> {
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           CircleAvatar(
                             radius: 40,
-                            backgroundColor: Colors.purple,
-                            child: Icon(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            child: const Icon(
                               Icons.subject,
                               color: Colors.white,
                             ),
@@ -167,13 +192,14 @@ class _MyHomePageState extends State<HomePage> {
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           CircleAvatar(
                             radius: 40,
-                            backgroundColor: Colors.purpleAccent,
-                            child: Icon(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            child: const Icon(
                               Icons.camera_alt,
-                              color: Colors.purple,
+                              color: Colors.white,
                             ),
                           ),
                           SizedBox(height: 8),
@@ -203,17 +229,18 @@ class _MyHomePageState extends State<HomePage> {
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           CircleAvatar(
                             radius: 40,
-                            backgroundColor: Colors.grey,
-                            child: Icon(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            child: const Icon(
                               Icons.upload,
                               color: Colors.white,
                             ),
                           ),
-                          SizedBox(height: 8),
-                          Text(
+                          const SizedBox(height: 8),
+                          const Text(
                             'Upload',
                             textAlign: TextAlign.center,
                           ),
