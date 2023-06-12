@@ -2,6 +2,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shortenit/screens/entertext.dart';
 import 'package:shortenit/screens/recognize.dart';
 import 'package:shortenit/utils/image_cropper.dart';
 import 'package:shortenit/utils/image_picker_class.dart';
@@ -151,8 +152,11 @@ class _MyHomePageState extends State<HomePage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        // Perform action for Button 1
-                        // Add your desired logic here
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (_) => const EnterTextPage(),
+                            ));
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
