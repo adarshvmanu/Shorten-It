@@ -83,7 +83,8 @@ class _HiveBoxListViewState extends State<HiveBoxListView> {
     return ListView.builder(
       itemCount: box.length,
       itemBuilder: (context, index) {
-        final summaryQuestion = box.getAt(index) as SummaryQuestion;
+        final reversedIndex = box.length - 1 - index;
+        final summaryQuestion = box.getAt(reversedIndex) as SummaryQuestion;
         return Card(
           child: Padding(
             padding: const EdgeInsets.all(18.0),
@@ -107,7 +108,7 @@ class _HiveBoxListViewState extends State<HiveBoxListView> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: () => deleteItem(index),
+                  onPressed: () => deleteItem(reversedIndex),
                 ),
               ],
             ),
