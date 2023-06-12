@@ -149,17 +149,23 @@ class _RecognizePageState extends State<RecognizePage> {
                     ),
                   ),
                 if (summarizedText.isNotEmpty)
-                  FilledButton(
-                    onPressed: () async {
-                      final box =
-                          Hive.box<SummaryQuestion>('summary_question_box');
-                      final summaryQuestion = SummaryQuestion()
-                        ..summary = summarizedText
-                        ..question = 'Default Question';
-                      await box.add(summaryQuestion);
-                      showSummarySavedSnackbar();
-                    },
-                    child: const Text('Save Summary'),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: FilledButton(
+                        onPressed: () async {
+                          final box =
+                              Hive.box<SummaryQuestion>('summary_question_box');
+                          final summaryQuestion = SummaryQuestion()
+                            ..summary = summarizedText
+                            ..question = 'Default Question';
+                          await box.add(summaryQuestion);
+                          showSummarySavedSnackbar();
+                        },
+                        child: const Text('Save Summary'),
+                      ),
+                    ),
                   ),
               ],
             ),
