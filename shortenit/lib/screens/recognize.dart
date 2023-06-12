@@ -1,9 +1,11 @@
 import 'dart:developer';
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shortenit/main.dart';
 import 'package:shortenit/models/database_model.dart';
 
 class RecognizePage extends StatefulWidget {
@@ -22,6 +24,15 @@ class _RecognizePageState extends State<RecognizePage> {
   bool isLoading = false;
   int totalTextSize = 0;
 
+  void showSummarySavedSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Summary Saved!'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +46,19 @@ class _RecognizePageState extends State<RecognizePage> {
     final cardHeight = screenHeight / 3;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("")),
+      appBar: AppBar(
+        title: const Text(""),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (_) => const MyApp(),
+                ));
+          },
+        ),
+      ),
       body: _isBusy == true
           ? const Center(
               child: CircularProgressIndicator(),
@@ -125,14 +148,18 @@ class _RecognizePageState extends State<RecognizePage> {
                       ),
                     ),
                   ),
-                  if (summarizedText.isNotEmpty)
-                  FilledButton(onPressed: () async {
-                    final box = Hive.box<SummaryQuestion>('summary_question_box');
-                    final summaryQuestion = SummaryQuestion()
-                      ..summary = summarizedText
-                      ..question = 'Default Question';
-                    await box.add(summaryQuestion);
-                  }, child: const Text('Save'), 
+                if (summarizedText.isNotEmpty)
+                  FilledButton(
+                    onPressed: () async {
+                      final box =
+                          Hive.box<SummaryQuestion>('summary_question_box');
+                      final summaryQuestion = SummaryQuestion()
+                        ..summary = summarizedText
+                        ..question = 'Default Question';
+                      await box.add(summaryQuestion);
+                      showSummarySavedSnackbar();
+                    },
+                    child: const Text('Save Summary'),
                   ),
               ],
             ),

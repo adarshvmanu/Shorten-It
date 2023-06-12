@@ -25,12 +25,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Shorten-it ',
       theme: ThemeData(
-        colorSchemeSeed: Colors.purple,
+        colorSchemeSeed: Colors.blue,
         useMaterial3: true,
         brightness: Brightness.light,
       ),
       darkTheme: ThemeData(
-        colorSchemeSeed: Colors.purple,
+        colorSchemeSeed: Colors.blue,
         useMaterial3: true,
         brightness: Brightness.dark,
       ),
@@ -91,7 +91,6 @@ class _HiveBoxListViewState extends State<HiveBoxListView> {
     );
   }
 }
-
 
 class _MyHomePageState extends State<HomePage> {
   @override
