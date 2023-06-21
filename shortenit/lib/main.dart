@@ -44,10 +44,9 @@ class MyApp extends StatelessWidget {
   }
 
   static final _defaultLightColorScheme =
-      ColorScheme.fromSwatch(primarySwatch: Colors.blue);
+      ColorScheme.fromSwatch(brightness: Brightness.light);
 
-  static final _defaultDarkColorScheme = ColorScheme.fromSwatch(
-      primarySwatch: Colors.blue, brightness: Brightness.dark);
+  static final _defaultDarkColorScheme = ColorScheme.fromSwatch(brightness: Brightness.dark);
 }
 
 class HomePage extends StatefulWidget {
@@ -96,13 +95,7 @@ class _HiveBoxListViewState extends State<HiveBoxListView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        summaryQuestion.question,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
+
                       Text(summaryQuestion.summary),
                     ],
                   ),
@@ -125,9 +118,11 @@ class _MyHomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.onPrimary ,
         title: Text(
           widget.title,
-          style: const TextStyle(fontWeight: FontWeight.w500),
+          style: TextStyle(fontWeight: FontWeight.w500,
+          color: Theme.of(context).colorScheme.onPrimaryContainer ),
         ),
         toolbarHeight: 116,
         elevation: 2,
@@ -164,14 +159,14 @@ class _MyHomePageState extends State<HomePage> {
                           CircleAvatar(
                             radius: 40,
                             backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            child: const Icon(
+                                Theme.of(context).colorScheme.onPrimary,
+                            child: Icon(
                               Icons.subject,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onPrimaryContainer,
                             ),
                           ),
-                          SizedBox(height: 8),
-                          Text(
+                          const SizedBox(height: 8),
+                          const Text(
                             'Text',
                             textAlign: TextAlign.center,
                           ),
@@ -201,14 +196,14 @@ class _MyHomePageState extends State<HomePage> {
                           CircleAvatar(
                             radius: 40,
                             backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            child: const Icon(
+                                Theme.of(context).colorScheme.onPrimary,
+                            child: Icon(
                               Icons.camera_alt,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onPrimaryContainer,
                             ),
                           ),
-                          SizedBox(height: 8),
-                          Text(
+                          const SizedBox(height: 8),
+                          const Text(
                             'Camera',
                             textAlign: TextAlign.center,
                           ),
@@ -238,10 +233,10 @@ class _MyHomePageState extends State<HomePage> {
                           CircleAvatar(
                             radius: 40,
                             backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            child: const Icon(
+                                Theme.of(context).colorScheme.onPrimary,
+                            child:  Icon(
                               Icons.upload,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onPrimaryContainer,
                             ),
                           ),
                           const SizedBox(height: 8),

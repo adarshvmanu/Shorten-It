@@ -52,10 +52,11 @@ class _RecognizePageState extends State<RecognizePage> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (_) => const MyApp(),
-                ));
+              context,
+              CupertinoPageRoute(
+                builder: (_) => const MyApp(),
+              ),
+            );
           },
         ),
       ),
@@ -139,12 +140,14 @@ class _RecognizePageState extends State<RecognizePage> {
                   ),
                 if (summarizedText.isNotEmpty)
                   Card(
+                    color: Theme.of(context).colorScheme.onPrimary,
                     margin: const EdgeInsets.all(20),
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Text(
                         summarizedText,
-                        style: const TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 16,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer),
                       ),
                     ),
                   ),
@@ -153,17 +156,23 @@ class _RecognizePageState extends State<RecognizePage> {
                     alignment: Alignment.centerRight,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: FilledButton(
-                        onPressed: () async {
-                          final box =
-                              Hive.box<SummaryQuestion>('summary_question_box');
-                          final summaryQuestion = SummaryQuestion()
-                            ..summary = summarizedText
-                            ..question = 'Default Question';
-                          await box.add(summaryQuestion);
-                          showSummarySavedSnackbar();
-                        },
-                        child: const Text('Save Summary'),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: FilledButton(
+                              onPressed: () async {
+                                final box =
+                                    Hive.box<SummaryQuestion>('summary_question_box');
+                                final summaryQuestion = SummaryQuestion()
+                                  ..summary = summarizedText
+                                  ..question = 'Default Question';
+                                await box.add(summaryQuestion);
+                                showSummarySavedSnackbar();
+                              },
+                              child: const Text('Save Summary'),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -200,7 +209,7 @@ class _RecognizePageState extends State<RecognizePage> {
     final int summarySize = (totalTextSize * percentage).round();
 
     final url = Uri.parse(
-        'https://abc2-2409-4073-496-2cd-ad6f-9a91-fbf5-708.ngrok-free.app/summarize');
+        'https://b251-2409-4073-4d9d-26f5-462-e5bc-484f-4a0.ngrok-free.app/summarize');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({'text': text, 'summary_size': summarySize});
 
